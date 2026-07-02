@@ -1,7 +1,25 @@
 import CardServicio from "../services/CardServicio";
-import { useAppContext } from "../../context/AppContext";
+// import { useAppContext } from "../../context/AppContext";
+import type { Servicio } from '../../interfaces/servicios';
+import { useEffect, useState } from "react";
+import { listarServiciosApi } from "../../helpers/queries";
 const Inicio = () => {
-  const { servicios } = useAppContext();
+  // const { servicios } = useAppContext();
+  const [servicios, setServicios] = useState<Servicio[]>([])
+
+  useEffect(()=>{
+    cargarServicios();
+  },[])
+
+  const cargarServicios= async()=>{
+    const respuestaServicios = await listarServiciosApi();
+    console.log(respuestaServicios)
+    if(respuestaServicios && respuestaServicios.status === 200){
+      const datos = await respuestaServicios.json()
+      console.log(datos)
+      setServicios(datos)
+    }
+  }
 
   return (
     <section className="space-y-8 animate-fadeIn">
@@ -24,7 +42,7 @@ const Inicio = () => {
       {servicios.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {servicios.map((servicio) => (
-            <CardServicio key={servicio.id} servicio={servicio} />
+            <CardServicio key={servicio._id} servicio={servicio} />
           ))}
         </div>
       ) : (
