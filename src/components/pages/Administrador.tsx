@@ -7,17 +7,14 @@ import { listarServiciosApi } from "../../helpers/queries";
 const Administrador = () => {
   const [servicios, setServicios] = useState<Servicio[]>([])
 
-
   useEffect(()=>{
     cargarServicios();
   },[])
 
   const cargarServicios= async()=>{
     const respuestaServicios = await listarServiciosApi();
-    console.log(respuestaServicios)
     if(respuestaServicios && respuestaServicios.status === 200){
       const datos = await respuestaServicios.json()
-      console.log(datos)
       setServicios(datos)
     }
   }
