@@ -18,7 +18,7 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
     formState: { errors },
     setValue,
   } = useForm<ServicioFormData>();
-// traigo los datos que necesito del contexto
+  // traigo los datos que necesito del contexto
   const { buscarServicio, editarServicio } = useAppContext();
   const { id } = useParams<{ id: string }>();
   const navegacion = useNavigate();
@@ -36,20 +36,34 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
     }
   }, []);
 
-  const onSubmit: SubmitHandler<ServicioFormData> = (data, e) => {
+  const onSubmit: SubmitHandler<ServicioFormData> = async (data, e) => {
     console.log(data);
     if (titulo.includes("Crear") && crearServicioApi) {
-      crearServicioApi(data)
-      Swal.fire({
-        title: "Servicio creado",
-        text: `El servicio '${data.nombreServicio}' fue creado correctamente`,
-        icon: "success",
-        background: "#18181b",
-        color: "#f4f4f5",
-        confirmButtonColor: "#3b82f6",
-      });
-      if (e) {
-        (e.target as HTMLFormElement).reset();
+      //aqui pido efectivamente crear un servicio
+      const respuesta = await crearServicioApi(data);
+      console.log(respuesta);
+      if (respuesta && respuesta.status === 201) {
+        Swal.fire({
+          title: "Servicio creado",
+          text: `El servicio '${data.nombreServicio}' fue creado correctamente`,
+          icon: "success",
+          background: "#18181b",
+          color: "#f4f4f5",
+          confirmButtonColor: "#3b82f6",
+        });
+        //else preguntar si el status code es 400 💥
+        if (e) {
+          (e.target as HTMLFormElement).reset();
+        }
+      } else {
+        Swal.fire({
+          title: "Ocurrio un error",
+          text: `El servicio '${data.nombreServicio}' no pudo ser creado`,
+          icon: "error",
+          background: "#18181b",
+          color: "#f4f4f5",
+          confirmButtonColor: "#3b82f6",
+        });
       }
     } else if (id) {
       editarServicio(id, data);
