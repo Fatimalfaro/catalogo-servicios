@@ -63,6 +63,7 @@ const Administrador = () => {
                   key={servicio._id}
                   servicio={servicio}
                   fila={indice + 1}
+                  setServicios={setServicios}
                 />
               ))
             ) : (
