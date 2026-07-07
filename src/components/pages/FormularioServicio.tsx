@@ -1,10 +1,9 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import Swal from "sweetalert2";
 import type { ServicioFormData } from "../../interfaces/servicios";
-import { useAppContext } from "../../context/AppContext";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
-import { crearServicioApi } from "../../helpers/queries";
+import { buscarServicioApi, crearServicioApi, editarServicioApi } from "../../helpers/queries";
 
 interface FormularioProps {
   titulo: string;
@@ -18,23 +17,29 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
     formState: { errors },
     setValue,
   } = useForm<ServicioFormData>();
-  // traigo los datos que necesito del contexto
-  const { buscarServicio, editarServicio } = useAppContext();
+
   const { id } = useParams<{ id: string }>();
   const navegacion = useNavigate();
 
   useEffect(() => {
-    if (titulo.includes("Editar") && id && buscarServicio) {
-      const servicioBuscado = buscarServicio(id);
-      if (servicioBuscado) {
-        setValue("nombreServicio", servicioBuscado.nombreServicio);
-        setValue("precio", servicioBuscado.precio);
-        setValue("categoria", servicioBuscado.categoria);
-        setValue("descripcion", servicioBuscado.descripcion);
-        setValue("imagen", servicioBuscado.imagen);
+    obtenerServicio();
+  }, []);
+
+  const obtenerServicio = async () => {
+    if (titulo.includes("Editar") && id && buscarServicioApi) {
+      const respuesta = await buscarServicioApi(id);
+      if (respuesta && respuesta.status === 200) {
+        const servicioBuscado = await respuesta.json();
+        if (servicioBuscado) {
+          setValue("nombreServicio", servicioBuscado.nombreServicio);
+          setValue("precio", servicioBuscado.precio);
+          setValue("categoria", servicioBuscado.categoria);
+          setValue("descripcion", servicioBuscado.descripcion);
+          setValue("imagen", servicioBuscado.imagen);
+        }
       }
     }
-  }, []);
+  };
 
   const onSubmit: SubmitHandler<ServicioFormData> = async (data, e) => {
     console.log(data);
@@ -66,16 +71,27 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
         });
       }
     } else if (id) {
-      editarServicio(id, data);
-      Swal.fire({
-        title: "Servicio editado",
-        text: `El servicio '${data.nombreServicio}' fue editado correctamente`,
-        icon: "success",
-        background: "#18181b",
-        color: "#f4f4f5",
-        confirmButtonColor: "#3b82f6",
-      });
-      navegacion("/administrador");
+      const respuesta = await editarServicioApi(id, data);
+      if(respuesta && respuesta.status === 200){
+        Swal.fire({
+          title: "Servicio editado",
+          text: `El servicio '${data.nombreServicio}' fue editado correctamente`,
+          icon: "success",
+          background: "#18181b",
+          color: "#f4f4f5",
+          confirmButtonColor: "#3b82f6",
+        });
+        navegacion("/administrador");
+      }else{
+         Swal.fire({
+          title: "Ocurrio un error",
+          text: `El servicio '${data.nombreServicio}' no pudo ser editado`,
+          icon: "error",
+          background: "#18181b",
+          color: "#f4f4f5",
+          confirmButtonColor: "#3b82f6",
+        });
+      }
     }
   };
 
