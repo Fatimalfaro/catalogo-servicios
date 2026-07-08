@@ -1,20 +1,27 @@
 import { useParams, useNavigate, Link } from "react-router";
-import { useAppContext } from "../../context/AppContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatearPrecio } from "../../utils/formateador";
+import { buscarServicioApi } from "../../helpers/queries";
+import type { Servicio } from "../../interfaces/servicios";
 const DetalleServicio = () => {
   const { id } = useParams<{ id: string }>();
-  const { buscarServicio } = useAppContext();
+  const [servicio, setServicio] = useState<Servicio | null>(null);
   const navigate = useNavigate();
 
-  const servicio = buscarServicio(id || "");
-
   useEffect(() => {
-    if (!servicio) {
-      // Si no existe el servicio, redirigir a 404
+    obtenerServicio();
+  }, []);
+
+  const obtenerServicio = async () => {
+    if (!id) return;
+    const respuesta = await buscarServicioApi(id);
+    if (respuesta && respuesta.status === 200) {
+      const data = await respuesta.json();
+      setServicio(data);
+    } else {
       navigate("/404", { replace: true });
     }
-  }, [servicio, navigate]);
+  };
 
   if (!servicio) {
     return null;
