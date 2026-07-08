@@ -42,11 +42,9 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
   };
 
   const onSubmit: SubmitHandler<ServicioFormData> = async (data, e) => {
-    console.log(data);
     if (titulo.includes("Crear") && crearServicioApi) {
       //aqui pido efectivamente crear un servicio
       const respuesta = await crearServicioApi(data);
-      console.log(respuesta);
       if (respuesta && respuesta.status === 201) {
         Swal.fire({
           title: "Servicio creado",
