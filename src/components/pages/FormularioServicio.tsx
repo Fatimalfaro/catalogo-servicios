@@ -36,11 +36,13 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
     }
   }, []);
 
-  const onSubmit: SubmitHandler<ServicioFormData> = (data, e) => {
+  const onSubmit: SubmitHandler<ServicioFormData> = async (data, e) => {
     console.log(data);
     if (titulo.includes("Crear") && crearServicioApi) {
-      crearServicioApi(data);
-      Swal.fire({
+      //aqui pido efectivamnete crear un servicio
+      const respuesta = await crearServicioApi(data);
+      if(respuesta && respuesta.status === 201) {
+        Swal.fire({
         title: "Servicio creado",
         text: `El servicio '${data.nombreServicio}' fue creado correctamente`,
         icon: "success",
@@ -48,6 +50,9 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
         color: "#f4f4f5",
         confirmButtonColor: "#3b82f6",
       });
+      }
+      //else preguntar si el status code es 400
+      
       if (e) {
         (e.target as HTMLFormElement).reset();
       }
