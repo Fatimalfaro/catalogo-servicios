@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import ItemTabla from "../services/ItemTabla";
-//import { useAppContext } from "../../context/AppContext";
 import { LuCirclePlus } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import type { Servicio } from "../../interfaces/servicios";
@@ -14,10 +13,8 @@ const Administrador = () => {
   
     const cargarServicios = async () => {
         const respuestaServicios = await listarServiciosApi();
-        console.log(respuestaServicios)
         if (respuestaServicios && respuestaServicios.status === 200) {
           const datos = await respuestaServicios.json();
-          console.log(datos)
           setServicios(datos)
     }
   }
