@@ -76,6 +76,16 @@ const FormularioServicio = ({ titulo }: FormularioProps) => {
       });
       navegacion("/administrador");
      }
+    }else{
+       Swal.fire({
+        title: "Ocurrio un error",
+        text: `El servicio '${data.nombreServicio}' no pudo ser editado`,
+        icon: "error",
+        background: "#18181b",
+        color: "#f4f4f5",
+        confirmButtonColor: "#3b82f6",
+      });
+
     }
   };
 
