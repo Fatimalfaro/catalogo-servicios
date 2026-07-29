@@ -75,4 +75,4 @@ mira la demo del proyecto [aqui](https://catalogo-servicios-c22.netlify.app/)
 
 ## 👩🏻‍💻 Autor
 
-Hecho con 💜 por [Emilse Arias](https://github.com/emiarias)
+Hecho por [Fátima Alfaro]
