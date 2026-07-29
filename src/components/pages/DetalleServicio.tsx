@@ -1,8 +1,8 @@
 import { useParams, useNavigate, Link } from "react-router";
 import { useEffect, useState } from "react";
-import { formatearPrecio } from "../../utils/formateador";
 import { buscarServicioApi } from "../../helpers/queries";
 import type { Servicio } from "../../interfaces/servicios";
+import { formatearPrecio } from "../../utils/formateador";
 const DetalleServicio = () => {
   const { id } = useParams<{ id: string }>();
   const [servicio, setServicio] = useState<Servicio | null>(null);

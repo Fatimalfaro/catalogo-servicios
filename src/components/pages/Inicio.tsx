@@ -1,21 +1,22 @@
-import CardServicio from "../services/CardServicio";
-import type { Servicio } from '../../interfaces/servicios';
-import { useEffect, useState } from "react";
 import { listarServiciosApi } from "../../helpers/queries";
+import type { Servicio } from "../../interfaces/servicios";
+import CardServicio from "../services/CardServicio";
+import { useEffect, useState } from "react";
+  
 const Inicio = () => {
-  const [servicios, setServicios] = useState<Servicio[]>([])
+  const [servicios, setServicios] = useState<Servicio[]>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     cargarServicios();
-  },[])
+  }, []);
 
-  const cargarServicios= async()=>{
-    const respuestaServicios = await listarServiciosApi();
-    if(respuestaServicios && respuestaServicios.status === 200){
-      const datos = await respuestaServicios.json()
-      setServicios(datos)
-    }
+  const cargarServicios = async () => {
+      const respuestaServicios = await listarServiciosApi();
+      if (respuestaServicios && respuestaServicios.status === 200) {
+        const datos = await respuestaServicios.json();
+        setServicios(datos)
   }
+}
 
   return (
     <section className="space-y-8 animate-fadeIn">
